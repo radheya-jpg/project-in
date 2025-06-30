@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Paws For All </title>
+  <style>
+    body { font-family: sans-serif; background: #111; color: #fff; padding: 20px; }
+    .pet { background: #1DB954; padding: 20px; margin: 10px 0; border-radius: 10px; }
+    .pet h2 { margin: 0 0 10px; }
+    form { margin-bottom: 30px; background: #222; padding: 20px; border-radius: 10px; }
+    input, select { margin: 5px 0; padding: 10px; width: 100%; border-radius: 5px; border: none; }
+    button { padding: 10px 20px; background: #1DB954; color: #fff; border: none; border-radius: 5px; }
+  </style>
+</head>
+<body>
+
+  <h1>Paws For All <br>
+    Add a Pet</h1>
+  <form id="petForm">
+    <input type="text" name="name" placeholder="Pet Name" required />
+    <input type="text" name="type" placeholder="Pet Type (Dog/Cat/etc)" required />
+    <input type="number" name="age" placeholder="Age" required />
+    <select name="status">
+      <option value="Available">Available</option>
+      <option value="Adopted">Adopted</option>
+    </select>
+    <button type="submit">Add Pet</button>
+  </form>
+
+  <h2>Available Pets</h2>
+  <div id="pet-list"></div>
+
+  <script>
+    const API_URL = "https://api.sheety.co/8aacc21f8bc0217a580a58f5564fe4c3/pawsforallPets/sheet1";
+
+    const form = document.getElementById("petForm");
+    const petList = document.getElementById("pet-list");
+
+    // Submit new pet
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const newPet = {
+        sheet1: {
+          name: form.name.value,
+          type: form.type.value,
+          age: form.age.value,
+          status: form.status.value
+        }
+      };
+
+      fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newPet)
+      })
+      .then(res => res.json())
+      .then(() => {
+        form.reset();
+        loadPets();
+      });
+    });
+
+    // Load all pets
+    function loadPets() {
+      fetch(API_URL)
+        .then(res => res.json())
+        .then(data => {
+          petList.innerHTML = "";
+          data.sheet1.forEach(pet => {
+            const div = document.createElement("div");
+            div.className = "pet";
+            div.innerHTML = `
+              <h2>${pet.name} (${pet.type})</h2>
+              <p>Age: ${pet.age}</p>
+              <p>Status: ${pet.status}</p>
+            `;
+            petList.appendChild(div);
+          });
+        });
+    }
+
+    loadPets();
+  </script>
+
+</body>
+</html>
