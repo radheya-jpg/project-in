@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Sign Up</title>
+  <link rel="stylesheet" href="login-signup.css">
+</head>
+<body>
+  <div class="container">
+    <div class="form">
+      <h2>Sign Up</h2>
+      <form id="signup-form">
+        <div class="form-group">
+          <label for="signup-email">Email</label>
+          <input type="email" id="signup-email" required placeholder="Enter your email">
+        </div>
+        <div class="form-group">
+          <label for="signup-password">Password</label>
+          <input type="password" id="signup-password" required placeholder="Enter your password">
+        </div>
+        <button type="submit" class="btn">Sign Up</button>
+      </form>
+      <p>Already have an account? <a href="login.html">Login</a></p>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBnAfMYxLsk7BNBlHzVIQbO2eUexsAr8uE",
+      authDomain: "pawsforall-b88b6.firebaseapp.com",
+      projectId: "pawsforall-b88b6",
+      storageBucket: "pawsforall-b88b6.firebasestorage.app",
+      messagingSenderId: "998135652933",
+      appId: "1:998135652933:web:52a7768ccfa03d711bb92c"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    document.getElementById("signup-form").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const email = document.getElementById("signup-email").value;
+      const password = document.getElementById("signup-password").value;
+
+      createUserWithEmailAndPassword(auth, email, password)
+        .then(() => {
+          alert("Signup successful!");
+          window.location.href = "login.html";
+        })
+        .catch((error) => {
+          alert("Signup failed: " + error.message);
+        });
+    });
+  </script>
+</body>
+</html>
